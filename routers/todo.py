@@ -9,7 +9,7 @@ from database.database import get_db
 
 router = APIRouter()
 
-@router.post("/", response_model=TodoOut)
+@router.post("/", response_model=TodoOut, status_code=201)
 def create_todo(todo: TodoCreate, db: Session = Depends(get_db)):
     db_todo = TodoItem(**todo.dict())
     db.add(db_todo)
@@ -39,7 +39,7 @@ def update_todo(todo_id: int, todo: TodoUpdate, db: Session = Depends(get_db)):
     db.refresh(db_todo)
     return db_todo
 
-@router.delete("/{todo_id}", response_model=dict)
+@router.delete("/{todo_id}", status_code=204)
 def delete_todo(todo_id: int, db: Session = Depends(get_db)):
     db_todo = db.query(TodoItem).filter(TodoItem.id == todo_id).first()
     if not db_todo:
